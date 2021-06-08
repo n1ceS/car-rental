@@ -15,7 +15,7 @@ import javax.persistence.Table;
 public class UserRole {
     @Id
     @Column(name = "ID")
-    private long id;
+    private Long id;
 
     @Column(name = "type")
     private String type;
