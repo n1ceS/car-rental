@@ -15,7 +15,7 @@ public class Rent {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
-    private Long ID;
+    private Long id;
 
     @Column(name = "carID")
     private long carID;
@@ -28,6 +28,9 @@ public class Rent {
 
     @Column(name = "endDate")
     private Timestamp endDate;
+
+    @Column(name = "totalCost")
+    private double totalCost;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rentalstatus")

@@ -14,6 +14,8 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class CarDTO {
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Long id;
 
     private String brand;
 
@@ -25,7 +27,6 @@ public class CarDTO {
 
     private int year;
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String status;
 
     private String fuelType;

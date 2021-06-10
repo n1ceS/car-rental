@@ -14,8 +14,11 @@ import java.util.List;
 @Service
 public class CarStatusServiceImpl implements CarStatusService {
 
-    @Autowired
-    private CarStatusRepository carStatusRepository;
+    private final CarStatusRepository carStatusRepository;
+
+    public CarStatusServiceImpl(CarStatusRepository carStatusRepository) {
+        this.carStatusRepository = carStatusRepository;
+    }
 
     @Override
     public CarStatus addCarStatus(CarStatus carStatus) {
@@ -24,7 +27,7 @@ public class CarStatusServiceImpl implements CarStatusService {
 
     @Override
     public CarStatus editCarStatus(CarStatus carStatus) {
-        CarStatus carStatusToEdit = carStatusRepository.findById(carStatus.getCarStatus()).orElseThrow(() -> new ResourceNotFoundException("car", "id", carStatus.getCarStatus()));
+        CarStatus carStatusToEdit = carStatusRepository.findById(carStatus.getCarStatus()).orElseThrow(() -> new ResourceNotFoundException("carStatus", "id", carStatus.getCarStatus()));
         carStatusToEdit.setDescription(carStatus.getDescription());
         return carStatusToEdit;
     }
@@ -43,6 +46,6 @@ public class CarStatusServiceImpl implements CarStatusService {
 
     @Override
     public CarStatus getCarStatusById(String status) {
-        return carStatusRepository.getById(status);
+        return carStatusRepository.findById(status).orElseThrow(() -> new ResourceNotFoundException("status", "id", status));
     }
 }

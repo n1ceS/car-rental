@@ -6,6 +6,7 @@ import pl.mcm.carrental.payload.ApiResponse;
 
 @ResponseStatus(value = HttpStatus.NOT_FOUND)
 public class ResourceNotFoundException  extends RuntimeException{
+    private static final long serialVersionUID = 1L;
 
     private transient ApiResponse apiResponse;
 
@@ -18,6 +19,7 @@ public class ResourceNotFoundException  extends RuntimeException{
         this.resourceName = resourceName;
         this.fieldName = fieldName;
         this.fieldValue = fieldValue;
+        setApiResponse();
     }
 
     public ApiResponse getApiResponse() {

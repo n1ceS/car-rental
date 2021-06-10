@@ -27,12 +27,12 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public List<Car> getAvailableCars(int page, Sort.Direction sort) {
+    public List<Car> getAvailableCars() {
          return carRepository.getAllByCarStatus("READY");
     }
 
     @Override
-    public List<String> getAllBrands(int page, Sort.Direction sort) {
+    public List<String> getAllBrands() {
         return carRepository.getAllBrands();
     }
 
@@ -50,8 +50,8 @@ public class CarServiceImpl implements CarService {
 
     @Override
     @Transactional
-    public Car editCar(Car car) {
-        Car carToEdit = carRepository.findById(car.getId()).orElseThrow(() -> new ResourceNotFoundException("car", "id", car.getId()));
+    public Car editCar(Long id, Car car) {
+        Car carToEdit = carRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("car", "id", id));
         carToEdit.setBrand(car.getBrand());
         carToEdit.setModel(car.getModel());
         carToEdit.setPrice(car.getPrice());
@@ -61,9 +61,14 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public ApiResponse deleteCar(long id) {
+    public ApiResponse deleteCar(Long id) {
         carRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("car", "id", id));
         carRepository.deleteById(id);
-        return new ApiResponse(Boolean.TRUE, "You successfully deleted car");
+        return new ApiResponse(Boolean.TRUE, "Car with id: "+ id +" has been deleted!");
+    }
+
+    @Override
+    public List<Car> getCarsByStatus(String status) {
+        return carRepository.getAllByCarStatus(status);
     }
 }

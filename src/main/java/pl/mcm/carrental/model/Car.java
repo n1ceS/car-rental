@@ -28,7 +28,7 @@ public class Car {
     @Column(name = "status")
     private String carStatus;
 
-    @OneToOne(mappedBy = "car", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "car", cascade = CascadeType.REMOVE)
     private CarDetails carDetails;
 
 

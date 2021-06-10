@@ -1,16 +1,12 @@
 package pl.mcm.carrental.controller;
 
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import pl.mcm.carrental.dto.CarDTO;
 import pl.mcm.carrental.model.Car;
 import pl.mcm.carrental.model.CarDetails;
-import pl.mcm.carrental.model.CarStatus;
+import pl.mcm.carrental.payload.ApiResponse;
 import pl.mcm.carrental.service.CarDetailsService;
 import pl.mcm.carrental.service.CarService;
 import pl.mcm.carrental.service.CarStatusService;
@@ -24,41 +20,79 @@ import java.util.stream.Collectors;
 @RequestMapping("/cars")
 public class CarController {
 
-    @Autowired
-    private CarService carService;
+    private final CarService carService;
 
-    @Autowired
-    private CarDetailsService carDetailsService;
+    private final CarDetailsService carDetailsService;
 
-    @Autowired
-    private CarStatusService carStatusService;
+    private final CarStatusService carStatusService;
 
-    @Autowired
-    private ModelMapper modelMapper;
+    public CarController(CarService carService, CarDetailsService carDetailsService, CarStatusService carStatusService) {
+        this.carService = carService;
+        this.carDetailsService = carDetailsService;
+        this.carStatusService = carStatusService;
+    }
 
     @GetMapping
     public ResponseEntity<List<CarDTO>> getAllCars(
             @RequestParam(value = "page", required = false, defaultValue = ConstantAppValues.DEFAULT_PAGE) Integer page,
             @RequestParam(value = "size", required = false, defaultValue = ConstantAppValues.DEFAULT_PAGE_SIZE) Integer size) {
-        {
             List<Car> cars = carService.getAllCars(page, size);
+
             return new ResponseEntity<>(cars.stream().map(this::convertToDto).collect(Collectors.toList()), HttpStatus.OK);
-        }
+    }
+
+    @GetMapping("/status/{status}")
+    public ResponseEntity<List<CarDTO>> getCarsByStatus(@PathVariable(name = "status") String status) {
+        List<Car> cars = carService.getCarsByStatus(status);
+        return new ResponseEntity<>(cars.stream().map(this::convertToDto).collect(Collectors.toList()), HttpStatus.OK);
+    }
+
+    @GetMapping("/available")
+    public ResponseEntity<List<CarDTO>> getAvailableCars() {
+        List<Car> availableCars = carService.getAvailableCars();
+        return new ResponseEntity<>(availableCars.stream().map(this::convertToDto).collect(Collectors.toList()), HttpStatus.OK);
+    }
+
+    @GetMapping("/brands")
+    public ResponseEntity<List<String>> getAllBrands() {
+        List<String> brands= carService.getAllBrands();
+        return new ResponseEntity<>(brands, HttpStatus.OK);
+    }
+
+    @GetMapping("/{brand}/models")
+    public ResponseEntity<List<String>> getAllModelsFromBrand(@PathVariable String brand) {
+        List<String> allModelsFromBrand = carService.getAllModelsFromBrand(brand);
+        return new ResponseEntity<>(allModelsFromBrand, HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<CarDTO> addCar(@RequestBody CarDTO carDTO) throws ParseException {
+        carStatusService.getCarStatusById(carDTO.getStatus());
         Car car = convertToEntity(carDTO);
-        car.setCarStatus("READY");
+        car.setBrand(car.getBrand().toLowerCase());
         carService.addCar(car);
         carDetailsService.addCarDetails(getCarDetailsFromCarDTO(car.getId(), carDTO));
 
         return new ResponseEntity<>(carDTO, HttpStatus.CREATED);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<CarDTO> editCar(@PathVariable(name = "id") Long id, @RequestBody CarDTO carDTO) throws ParseException {
+        Car carToEdit = convertToEntity(carDTO);
+        carToEdit.setCarDetails(getCarDetailsFromCarDTO(id ,carDTO));
+        carToEdit.setId(carToEdit.getId());
+        Car carEdited = carService.editCar(id, carToEdit);
+        return new ResponseEntity<>(convertToDto(carEdited), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse> deleteCar(@PathVariable(name = "id") Long id) {
+        return new ResponseEntity<>(carService.deleteCar(id), HttpStatus.OK);
+    }
     private CarDTO convertToDto(Car car) {
         CarDTO carDTO = new CarDTO();
         CarDetails carDetails = carDetailsService.getDetailsByCarId(car.getId());
+        carDTO.setId(car.getId());
         carDTO.setBrand(car.getBrand());
         carDTO.setModel(car.getModel());
         carDTO.setPrice(car.getPrice());
@@ -81,6 +115,7 @@ public class CarController {
         car.setBrand(carDTO.getBrand());
         car.setPrice(carDTO.getPrice());
         car.setCarStatus(carDTO.getStatus());
+        car.setId(carDTO.getId());
         return car;
     }
     private CarDetails getCarDetailsFromCarDTO(Long carId, CarDTO carDTO) {

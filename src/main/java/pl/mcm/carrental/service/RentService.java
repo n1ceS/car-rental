@@ -1,6 +1,7 @@
 package pl.mcm.carrental.service;
 
 import pl.mcm.carrental.model.Rent;
+import pl.mcm.carrental.payload.ApiResponse;
 
 import java.awt.print.Pageable;
 import java.util.List;
@@ -9,17 +10,17 @@ public interface RentService {
 
     Rent addRent(Rent Rent);
 
-    Rent editRent(Rent Rent);
+    Rent editRent(Long id, Rent Rent);
 
-    Rent cancelRent(long rentId);
+    Rent cancelRent(Long rentId);
 
-    Rent changeStatus(long rentId, long statusId);
+    Rent changeStatus(Long rentId, String status);
 
-    List<Rent> getAllRents(Pageable page);
+    List<Rent> getAllRents(int page, int size);
 
-    Rent getRentById(long rentId);
+    Rent getRentById(Long rentId);
 
-    void deleteRent(long rentId);
+    ApiResponse deleteRent(Long rentId);
 
     List<Rent> getRentsByRentedStatus(Pageable pagea);
 
@@ -29,6 +30,6 @@ public interface RentService {
 
     List<Rent> getRentsByReturnedStatus(Pageable page);
 
-    List<Rent> getRentsByUserId(long userId);
+    List<Rent> getRentsByUserId(Long userId);
 
 }

@@ -11,15 +11,17 @@ public interface CarService {
 
     List<Car> getAllCars(int page, int size);
 
-    List<Car> getAvailableCars(int page, Sort.Direction sort);
+    List<Car> getAvailableCars();
 
-    List<String> getAllBrands(int page, Sort.Direction sort);
+    List<String> getAllBrands();
 
     List<String> getAllModelsFromBrand(String brand);
 
     Car addCar(Car car);
 
-    Car editCar(Car car);
+    Car editCar(Long id, Car car);
 
-    ApiResponse deleteCar(long id);
+    ApiResponse deleteCar(Long id);
+
+    List<Car> getCarsByStatus(String status);
 }

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.mcm.carrental.dto.CarDTO;
 import pl.mcm.carrental.model.Car;
 import pl.mcm.carrental.model.CarStatus;
+import pl.mcm.carrental.payload.ApiResponse;
 import pl.mcm.carrental.service.CarStatusService;
 
 import java.text.ParseException;
@@ -25,9 +26,24 @@ public class CarStatusController {
             return new ResponseEntity<>(cars, HttpStatus.OK);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<CarStatus> getCarStatusById(@PathVariable(name = "id") String id) {
+        return new ResponseEntity<>(carStatusService.getCarStatusById(id), HttpStatus.OK);
+    }
+
     @PostMapping
     public ResponseEntity<CarStatus> addCarStatus(@RequestBody CarStatus carStatus) throws ParseException {
         return new ResponseEntity<>(carStatusService.addCarStatus(carStatus), HttpStatus.CREATED);
+    }
+
+    @PutMapping()
+    public ResponseEntity<CarStatus> editCarStatus(@RequestBody CarStatus carStatus) {
+        return new ResponseEntity<>(carStatusService.editCarStatus(carStatus), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse> deleteCarStatus(@PathVariable(name = "id") String id) {
+        return new ResponseEntity<>(carStatusService.deleteCarStatus(id), HttpStatus.OK);
     }
 
 }
