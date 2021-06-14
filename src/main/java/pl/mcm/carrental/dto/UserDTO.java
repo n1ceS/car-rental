@@ -1,11 +1,19 @@
 package pl.mcm.carrental.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
 
+@Data
+@Builder
+@AllArgsConstructor
 public class UserDTO {
 
     @NotNull
@@ -18,10 +26,12 @@ public class UserDTO {
 
     @NotNull
     @Size(min = 6, max = 20)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @NotNull
     @Size(min = 6, max = 20)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String repeatedPassword;
 
     @NotNull
@@ -35,4 +45,7 @@ public class UserDTO {
 
     @NotNull
     private Date birthDate;
+
+    public UserDTO() {
+    }
 }
