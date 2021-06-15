@@ -4,6 +4,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.mcm.carrental.exception.BadRequestException;
 import pl.mcm.carrental.exception.ResourceNotFoundException;
 import pl.mcm.carrental.model.User;
@@ -15,6 +16,7 @@ import pl.mcm.carrental.service.UserService;
 import pl.mcm.carrental.utils.ConstantAppValues;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -44,7 +46,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserByEmail(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("user", "email", email));
+        User user = userRepository.findUserByEmail(email).orElseThrow(() -> new ResourceNotFoundException("user", "email", email));
         return user;
     }
 
@@ -60,7 +62,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User editUser(String email, User user) {
-        User userToEdit = userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("user", "email", email));
+        User userToEdit = userRepository.findUserByEmail(email).orElseThrow(() -> new ResourceNotFoundException("user", "email", email));
         if(userRepository.existsByEmail(user.getEmail())) {
             ApiResponse apiResponse = new ApiResponse(Boolean.FALSE, "Email is already taken!");
             throw new BadRequestException(apiResponse);
@@ -79,5 +81,11 @@ public class UserServiceImpl implements UserService {
         UserRole userRole = userRoleRepository.findById(roleId).orElseThrow(() -> new ResourceNotFoundException("role", "id", roleId));
         user.getUserRoleSet().add(userRole);
         return user;
+    }
+
+    @Override
+    @Transactional
+    public Optional<User> findUserByEmail(String email) {
+        return userRepository.findUserByEmail(email);
     }
 }

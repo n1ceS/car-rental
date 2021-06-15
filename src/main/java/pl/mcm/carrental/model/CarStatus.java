@@ -15,7 +15,7 @@ public class CarStatus {
 
     @Id()
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JoinColumn(name = "car_status" )
+    @JoinColumn(name = "carstatus" )
     private String carStatus;
 
     @Column(name = "description")

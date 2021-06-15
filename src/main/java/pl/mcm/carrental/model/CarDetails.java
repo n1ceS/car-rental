@@ -22,7 +22,7 @@ public class CarDetails {
     @Column(name = "year")
     private int year;
 
-    @Column(name = "fuelType")
+    @Column(name = "fuel_type")
     private String fuelType;
 
     @Column(name = "power")
@@ -40,7 +40,7 @@ public class CarDetails {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "doorsNumber")
+    @Column(name = "doors_number")
     private String doorsNumber;
 
     @OneToOne(fetch = FetchType.LAZY)

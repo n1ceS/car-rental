@@ -23,13 +23,13 @@ public class Rent {
     @Column(name = "userID")
     private long userID;
 
-    @Column(name = "startDate")
+    @Column(name = "start_date")
     private Timestamp startDate;
 
-    @Column(name = "endDate")
+    @Column(name = "end_date")
     private Timestamp endDate;
 
-    @Column(name = "totalCost")
+    @Column(name = "total_cost")
     private double totalCost;
 
     @ManyToOne(fetch = FetchType.LAZY)
