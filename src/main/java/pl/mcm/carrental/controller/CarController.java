@@ -2,6 +2,7 @@ package pl.mcm.carrental.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.mcm.carrental.dto.CarDTO;
 import pl.mcm.carrental.model.Car;
@@ -66,6 +67,7 @@ public class CarController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<CarDTO> addCar(@RequestBody CarDTO carDTO) throws ParseException {
         carStatusService.getCarStatusById(carDTO.getStatus());
         Car car = convertToEntity(carDTO);

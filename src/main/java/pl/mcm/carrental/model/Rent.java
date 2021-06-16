@@ -14,13 +14,13 @@ public class Rent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "carID")
+    @Column(name = "car_id")
     private long carID;
 
-    @Column(name = "userID")
+    @Column(name = "user_id")
     private long userID;
 
     @Column(name = "start_date")

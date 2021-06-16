@@ -13,7 +13,7 @@ import javax.persistence.*;
 public class CarDetails {
 
     @Id
-    @Column(name = "cars_ID")
+    @Column(name = "car_id")
     private Long carID;
 
     @Column(name = "type")
@@ -44,7 +44,7 @@ public class CarDetails {
     private String doorsNumber;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cars_ID")
+    @JoinColumn(name = "car_id")
     private Car car;
 
     public CarDetails() {

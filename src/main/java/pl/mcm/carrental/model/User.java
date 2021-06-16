@@ -54,6 +54,10 @@ public class User implements UserDetails {
         return auth;
     }
 
+    public Set<UserRole> getUserRoleSet() {
+        return userRoleSet;
+    }
+
     public String getUsername() {
         return email;
     }
