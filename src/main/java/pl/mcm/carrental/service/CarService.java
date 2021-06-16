@@ -24,4 +24,6 @@ public interface CarService {
     ApiResponse deleteCar(Long id);
 
     List<Car> getCarsByStatus(String status);
+
+    Car getCarById(Long id);
 }

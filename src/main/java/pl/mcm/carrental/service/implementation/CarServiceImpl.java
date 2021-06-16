@@ -71,4 +71,11 @@ public class CarServiceImpl implements CarService {
     public List<Car> getCarsByStatus(String status) {
         return carRepository.getAllByCarStatus(status);
     }
+
+    @Override
+    public Car getCarById(Long id) {
+        Car car = carRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("car", "id", id));
+
+        return car;
+    }
 }
