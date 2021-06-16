@@ -1,10 +1,8 @@
 package pl.mcm.carrental.service;
 
-import org.springframework.data.domain.Sort;
 import pl.mcm.carrental.model.Car;
 import pl.mcm.carrental.payload.ApiResponse;
 
-import java.awt.print.Pageable;
 import java.util.List;
 
 public interface CarService {

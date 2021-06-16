@@ -2,12 +2,10 @@ package pl.mcm.carrental.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.mcm.carrental.dto.UserDTO;
 import pl.mcm.carrental.model.User;
+import pl.mcm.carrental.payload.ApiResponse;
 import pl.mcm.carrental.service.UserService;
 import pl.mcm.carrental.utils.ConstantAppValues;
 
@@ -31,6 +29,26 @@ public class UserController {
         List<User> users = userService.getAllUsers(page, size);
 
         return new ResponseEntity<>(users.stream().map(this::convertToDto).collect(Collectors.toList()), HttpStatus.OK);
+    }
+
+    @GetMapping("/{email}")
+    public ResponseEntity<UserDTO> getUserByEmail(@PathVariable String email) {
+        UserDTO userDTO = convertToDto(userService.getUserByEmail(email));
+        return new ResponseEntity<>(userDTO, HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseEntity<UserDTO> addUser(@RequestBody UserDTO userDTO) {
+        User user = convertToEntity(userDTO);
+        userDTO = convertToDto(userService.addUser(user));
+        return new ResponseEntity<>(userDTO, HttpStatus.CREATED);
+    }
+
+    @PutMapping
+    public ResponseEntity<UserDTO> editUser(@RequestBody UserDTO userDTO) {
+        User user = convertToEntity(userDTO);
+        user = userService.editUser(userDTO.getEmail(), user);
+        return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
     private UserDTO convertToDto(User user) {

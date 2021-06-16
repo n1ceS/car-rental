@@ -1,18 +1,22 @@
 package pl.mcm.carrental.service.implementation;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import pl.mcm.carrental.exception.BadRequestException;
 import pl.mcm.carrental.exception.ResourceNotFoundException;
 import pl.mcm.carrental.model.User;
 import pl.mcm.carrental.model.UserRole;
+import pl.mcm.carrental.payload.ApiResponse;
 import pl.mcm.carrental.repository.UserRepository;
 import pl.mcm.carrental.repository.UserRoleRepository;
 import pl.mcm.carrental.service.UserService;
 import pl.mcm.carrental.utils.ConstantAppValues;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -21,9 +25,12 @@ public class UserServiceImpl implements UserService {
 
     private final UserRoleRepository userRoleRepository;
 
-    public UserServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository) {
+    private final PasswordEncoder passwordEncoder;
+
+    public UserServiceImpl(UserRepository userRepository, UserRoleRepository userRoleRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -39,22 +46,30 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserByEmail(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("user", "email", email));
+        User user = userRepository.findUserByEmail(email).orElseThrow(() -> new ResourceNotFoundException("user", "email", email));
         return user;
     }
 
     @Override
     public User addUser(User user) {
+        if(userRepository.existsByEmail(user.getEmail())) {
+            ApiResponse apiResponse =  new ApiResponse(Boolean.FALSE, "Email is already taken!");
+            throw new BadRequestException(apiResponse);
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
     @Override
-    public User editUser(Long id, User user) {
-        User userToEdit = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("user", "id", id));
+    public User editUser(String email, User user) {
+        User userToEdit = userRepository.findUserByEmail(email).orElseThrow(() -> new ResourceNotFoundException("user", "email", email));
+        if(userRepository.existsByEmail(user.getEmail())) {
+            ApiResponse apiResponse = new ApiResponse(Boolean.FALSE, "Email is already taken!");
+            throw new BadRequestException(apiResponse);
+        }
         userToEdit.setFirstname(user.getFirstname());
         userToEdit.setLastname(user.getLastname());
         userToEdit.setPassword(user.getPassword());
-        userToEdit.setEmail(user.getEmail());
         userToEdit.setPhone(user.getPhone());
         userToEdit.setBirthDate(user.getBirthDate());
         return userToEdit;
@@ -66,5 +81,11 @@ public class UserServiceImpl implements UserService {
         UserRole userRole = userRoleRepository.findById(roleId).orElseThrow(() -> new ResourceNotFoundException("role", "id", roleId));
         user.getUserRoleSet().add(userRole);
         return user;
+    }
+
+    @Override
+    @Transactional
+    public Optional<User> findUserByEmail(String email) {
+        return userRepository.findUserByEmail(email);
     }
 }

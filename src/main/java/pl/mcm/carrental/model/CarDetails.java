@@ -13,7 +13,7 @@ import javax.persistence.*;
 public class CarDetails {
 
     @Id
-    @Column(name = "cars_ID")
+    @Column(name = "car_id")
     private Long carID;
 
     @Column(name = "type")
@@ -22,7 +22,7 @@ public class CarDetails {
     @Column(name = "year")
     private int year;
 
-    @Column(name = "fuelType")
+    @Column(name = "fuel_type")
     private String fuelType;
 
     @Column(name = "power")
@@ -40,11 +40,11 @@ public class CarDetails {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "doorsNumber")
+    @Column(name = "doors_number")
     private String doorsNumber;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cars_ID")
+    @JoinColumn(name = "car_id")
     private Car car;
 
     public CarDetails() {
