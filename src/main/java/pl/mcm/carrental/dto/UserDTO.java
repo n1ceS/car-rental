@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 import pl.mcm.carrental.annotation.PasswordValueMatch;
 import pl.mcm.carrental.annotation.ValidPassword;
@@ -13,7 +14,13 @@ import pl.mcm.carrental.annotation.ValidPassword;
 import javax.validation.constraints.*;
 import java.util.Date;
 
-
+@PasswordValueMatch.List({
+        @PasswordValueMatch(
+                field = "password",
+                fieldMatch = "repeatedPassword",
+                message = "Passwords do not match!"
+        )
+})
 @Data
 @Builder
 @AllArgsConstructor
@@ -40,7 +47,7 @@ public class UserDTO {
     private String repeatedPassword;
 
     @NotBlank
-    @Pattern(regexp = "\\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}\\b", message = "Input have to be a email!")
+    @Pattern(regexp = "\\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}\\b", message = "Input have to be a email!")
     @Size(max = 255)
     private String email;
 
@@ -53,7 +60,7 @@ public class UserDTO {
     private Date birthDate;
 
     @NotBlank
-    @Max(value = 11, message = "Pesel must have max 11 digits")
+    @Length(max = 11, message = "Pesel must have max 11 digits")
     private String pesel;
 
     public UserDTO() {

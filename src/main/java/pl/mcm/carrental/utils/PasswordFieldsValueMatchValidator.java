@@ -36,10 +36,6 @@ public class PasswordFieldsValueMatchValidator implements ConstraintValidator<Pa
             context.disableDefaultConstraintViolation();
             context
                 .buildConstraintViolationWithTemplate(message)
-                .addPropertyNode(field)
-                .addConstraintViolation();
-            context
-                .buildConstraintViolationWithTemplate(message)
                 .addPropertyNode(fieldMatch)
                 .addConstraintViolation();
     }
