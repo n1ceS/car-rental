@@ -1,46 +1,59 @@
 package pl.mcm.carrental.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.Email;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.sql.Timestamp;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Data
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 public class RentDTO {
 
+    @JsonIgnore
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
-//    CarDTO albo sama marke i model
 
-    private String brand;
+    @NotNull(message = "Car id cannot be null")
+    @Min(value = 0, message = "Car Id must be equal or greater than 0")
+    private Long carID;
 
-    private String model;
+    @NotNull(message = "User id cannot be null")
+    @Min(value = 0, message = "User Id must be equal or greater than 0")
+    private Long userID;
 
-    //UserDTO albo email
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+//    @JsonFormat(pattern = "MM/dd/yyyy HH:MM")
+    private LocalDate startDate;
 
-    @NotNull
-    @Email
-    @Size(max = 255)
-    private String email;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private LocalDate endDate;
 
-//    Daty
+    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private BigDecimal totalCost;
 
-//    private Timestamp startDate;
+    public RentDTO() {
+    }
 
-//    private Timestamp endDate;
+    @JsonIgnore
+    @JsonProperty(value = "id")
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    private String rentStatus;
-
-    private String description;
+    @JsonIgnore
+    @JsonProperty(value = "total_cost")
+    public void setTotalCost(BigDecimal totalCost) {
+        this.totalCost = totalCost;
+    }
 }

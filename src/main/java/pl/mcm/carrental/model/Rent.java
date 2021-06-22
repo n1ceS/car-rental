@@ -4,13 +4,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Entity
-@Table(name = "Rentals")
+@Table(name = "rentals")
 @Getter
 @Setter
-public class Rent {
+public class Rent implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,13 +26,13 @@ public class Rent {
     private long userID;
 
     @Column(name = "start_date")
-    private Timestamp startDate;
+    private LocalDate startDate;
 
     @Column(name = "end_date")
-    private Timestamp endDate;
+    private LocalDate endDate;
 
     @Column(name = "total_cost")
-    private double totalCost;
+    private BigDecimal totalCost;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rentalstatus")

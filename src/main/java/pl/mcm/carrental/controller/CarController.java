@@ -13,7 +13,7 @@ import pl.mcm.carrental.service.CarService;
 import pl.mcm.carrental.service.CarStatusService;
 import pl.mcm.carrental.utils.ConstantAppValues;
 
-import java.text.ParseException;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -68,7 +68,7 @@ public class CarController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<CarDTO> addCar(@RequestBody CarDTO carDTO) throws ParseException {
+    public ResponseEntity<CarDTO> addCar(@Valid @RequestBody CarDTO carDTO)  {
         carStatusService.getCarStatusById(carDTO.getStatus());
         Car car = convertToEntity(carDTO);
         car.setBrand(car.getBrand().toLowerCase());
@@ -79,7 +79,7 @@ public class CarController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CarDTO> editCar(@PathVariable(name = "id") Long id, @RequestBody CarDTO carDTO) throws ParseException {
+    public ResponseEntity<CarDTO> editCar(@PathVariable(name = "id") Long id, @Valid @RequestBody CarDTO carDTO){
         Car carToEdit = convertToEntity(carDTO);
         carToEdit.setCarDetails(getCarDetailsFromCarDTO(id ,carDTO));
         carToEdit.setId(carToEdit.getId());
@@ -111,7 +111,7 @@ public class CarController {
         return carDTO;
     }
 
-    private Car convertToEntity(CarDTO carDTO) throws ParseException {
+    private Car convertToEntity(CarDTO carDTO){
         Car car = new Car();
         car.setModel(carDTO.getModel());
         car.setBrand(carDTO.getBrand());

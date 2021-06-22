@@ -2,11 +2,13 @@ package pl.mcm.carrental.model;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -30,11 +32,17 @@ public class User implements UserDetails {
     @Column(name = "lastname")
     private String lastname;
 
+    @JsonIgnore
     @Column(name = "password")
     private  String password;
 
+    @JsonIgnore
     @Column(name = "email")
     private  String email;
+
+    @JsonIgnore
+    @Column(name = "pesel")
+    private  String pesel;
 
     @Column(name = "phone")
     private  String phone;

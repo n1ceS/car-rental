@@ -4,13 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "cardetails")
 @Data
 @Builder
 @AllArgsConstructor
-public class CarDetails {
+public class CarDetails implements Serializable {
 
     @Id
     @Column(name = "car_id")

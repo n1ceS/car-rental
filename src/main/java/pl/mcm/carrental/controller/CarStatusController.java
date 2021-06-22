@@ -10,6 +10,7 @@ import pl.mcm.carrental.model.CarStatus;
 import pl.mcm.carrental.payload.ApiResponse;
 import pl.mcm.carrental.service.CarStatusService;
 
+import javax.validation.Valid;
 import java.text.ParseException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,12 +33,12 @@ public class CarStatusController {
     }
 
     @PostMapping
-    public ResponseEntity<CarStatus> addCarStatus(@RequestBody CarStatus carStatus) throws ParseException {
+    public ResponseEntity<CarStatus> addCarStatus(@Valid @RequestBody CarStatus carStatus) throws ParseException {
         return new ResponseEntity<>(carStatusService.addCarStatus(carStatus), HttpStatus.CREATED);
     }
 
     @PutMapping()
-    public ResponseEntity<CarStatus> editCarStatus(@RequestBody CarStatus carStatus) {
+    public ResponseEntity<CarStatus> editCarStatus(@Valid @RequestBody CarStatus carStatus) {
         return new ResponseEntity<>(carStatusService.editCarStatus(carStatus), HttpStatus.OK);
     }
 

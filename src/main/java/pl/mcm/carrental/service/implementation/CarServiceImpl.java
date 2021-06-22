@@ -12,6 +12,7 @@ import pl.mcm.carrental.service.CarService;
 import pl.mcm.carrental.utils.ConstantAppValues;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.awt.print.Pageable;
 import java.util.List;
 

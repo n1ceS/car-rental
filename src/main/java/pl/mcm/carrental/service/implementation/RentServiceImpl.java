@@ -7,39 +7,59 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.mcm.carrental.exception.ResourceNotFoundException;
 import pl.mcm.carrental.model.Rent;
 import pl.mcm.carrental.model.RentStatus;
+import pl.mcm.carrental.model.User;
 import pl.mcm.carrental.payload.ApiResponse;
+import pl.mcm.carrental.repository.CarRepository;
 import pl.mcm.carrental.repository.RentRepository;
 import pl.mcm.carrental.repository.RentStatusRepository;
+import pl.mcm.carrental.repository.UserRepository;
 import pl.mcm.carrental.service.RentService;
 import pl.mcm.carrental.utils.ConstantAppValues;
 
-import java.awt.print.Pageable;
+import java.math.BigDecimal;
+import java.time.Duration;
 import java.util.List;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 @Service
 public class RentServiceImpl implements RentService {
 
     private final RentRepository rentRepository;
 
+    private final CarRepository carRepository;
+
     private final RentStatusRepository rentStatusRepository;
 
-    public RentServiceImpl(RentRepository rentRepository, RentStatusRepository rentStatusRepository) {
+    private final UserRepository userRepository;
+
+    public RentServiceImpl(RentRepository rentRepository, CarRepository carRepository, RentStatusRepository rentStatusRepository, UserRepository userRepository) {
         this.rentRepository = rentRepository;
+        this.carRepository = carRepository;
         this.rentStatusRepository = rentStatusRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
-    public Rent addRent(Rent rent) {
+    public Rent addRent(Rent rent, String username) {
+        Long carId = rent.getCarID();
+        Long userId = userRepository.findUserByEmail(username).get().getId();
+        rent.setUserID(userId);
+        BigDecimal carPrice = carRepository.findById(carId).orElseThrow(() -> new ResourceNotFoundException("Car", "id", carId)).getPrice();
+        long daysBetween = DAYS.between(rent.getStartDate(), rent.getEndDate());
+        rent.setTotalCost(carPrice.multiply(new BigDecimal(daysBetween)));
         return rentRepository.save(rent);
     }
 
     @Override
-    public Rent editRent(Long id, Rent rent) {
+    public Rent editRent(Long id, Rent rent, String username) {
+        BigDecimal carPrice = carRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Car", "id", id)).getPrice();
         Rent rentToEdit = rentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("rent", "id", id));
         rentToEdit.setCarID(rent.getCarID());
-        rentToEdit.setUserID(rent.getUserID());
         rentToEdit.setStartDate(rent.getStartDate());
         rentToEdit.setEndDate(rent.getEndDate());
+        long daysBetween = DAYS.between(rent.getStartDate(), rent.getEndDate());
+        rent.setTotalCost(carPrice.multiply(new BigDecimal(daysBetween)));
         return rentToEdit;
     }
 
@@ -61,8 +81,9 @@ public class RentServiceImpl implements RentService {
     }
 
     @Override
-    public List<Rent> getAllRents(int page, int size) {
-        return rentRepository.findAllRents(PageRequest.of(page, size, Sort.by(ConstantAppValues.DEFAULT_SORT_DIRECTION, "id")));
+    public List<Rent> getAllRents(int page, int size, String username) {
+        User user  = userRepository.findUserByEmail(username).get();
+        return rentRepository.findAllByUserID(user.getId(), PageRequest.of(page, size, Sort.by(ConstantAppValues.DEFAULT_SORT_DIRECTION, "id")));
     }
 
     @Override
@@ -79,27 +100,13 @@ public class RentServiceImpl implements RentService {
     }
 
     @Override
-    public List<Rent> getRentsByRentedStatus(Pageable pagea) {
-        return null;
+    public List<Rent> getRentsByStatus(String username, String status) {
+        User user  = userRepository.findUserByEmail(username).get();
+        return rentRepository.findAllByRentStatusAndUserID(status, user.getId());
     }
 
     @Override
-    public List<Rent> getRentsByReservedStatus(Pageable page) {
-        return null;
-    }
-
-    @Override
-    public List<Rent> getRentsByCanceledStatus(Pageable page) {
-        return null;
-    }
-
-    @Override
-    public List<Rent> getRentsByReturnedStatus(Pageable page) {
-        return null;
-    }
-
-    @Override
-    public List<Rent> getRentsByUserId(Long userId) {
-        return null;
+    public List<Rent> getRentsByUserId(Long userId, int page, int size) {
+        return rentRepository.findAllByUserID(userId, PageRequest.of(page, size, Sort.by(ConstantAppValues.DEFAULT_SORT_DIRECTION, "id")));
     }
 }

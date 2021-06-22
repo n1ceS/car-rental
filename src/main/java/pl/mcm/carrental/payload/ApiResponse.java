@@ -7,6 +7,7 @@ import lombok.Data;
 import org.springframework.http.HttpStatus;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @JsonPropertyOrder({
@@ -27,6 +28,9 @@ public class ApiResponse implements Serializable {
     @JsonIgnore
     private HttpStatus httpStatus;
 
+    @JsonProperty("errors")
+    List<String> errors;
+
     public ApiResponse() {
     }
 
@@ -39,5 +43,9 @@ public class ApiResponse implements Serializable {
         this.success = success;
         this.message = message;
         this.httpStatus = httpStatus;
+    }
+
+    public void setErrors(List<String> errors) {
+        this.errors = errors;
     }
 }

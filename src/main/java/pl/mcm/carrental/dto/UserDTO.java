@@ -1,15 +1,18 @@
 package pl.mcm.carrental.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
+import pl.mcm.carrental.annotation.PasswordValueMatch;
+import pl.mcm.carrental.annotation.ValidPassword;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.Date;
+
 
 @Data
 @Builder
@@ -24,18 +27,20 @@ public class UserDTO {
     @Size(max = 50)
     private String lastname;
 
-    @NotNull
+    @NotBlank
     @Size(min = 6, max = 20)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @ValidPassword
     private String password;
 
-    @NotNull
+    @NotBlank
     @Size(min = 6, max = 20)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @ValidPassword
     private String repeatedPassword;
 
-    @NotNull
-    @Email
+    @NotBlank
+    @Pattern(regexp = "\\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}\\b", message = "Input have to be a email!")
     @Size(max = 255)
     private String email;
 
@@ -44,8 +49,25 @@ public class UserDTO {
     private String phone;
 
     @NotNull
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private Date birthDate;
 
+    @NotBlank
+    @Max(value = 11, message = "Pesel must have max 11 digits")
+    private String pesel;
+
     public UserDTO() {
+    }
+
+    @JsonIgnore
+    @JsonProperty(value = "password")
+    public String getPassword() {
+        return password;
+    }
+
+    @JsonIgnore
+    @JsonProperty(value = "repeatedPassword")
+    public String getRepeatedPassword() {
+        return repeatedPassword;
     }
 }

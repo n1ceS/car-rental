@@ -9,6 +9,7 @@ import pl.mcm.carrental.payload.ApiResponse;
 import pl.mcm.carrental.service.UserService;
 import pl.mcm.carrental.utils.ConstantAppValues;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,14 +39,14 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDTO> addUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> addUser(@Valid @RequestBody UserDTO userDTO) {
         User user = convertToEntity(userDTO);
         userDTO = convertToDto(userService.addUser(user));
         return new ResponseEntity<>(userDTO, HttpStatus.CREATED);
     }
 
     @PutMapping
-    public ResponseEntity<UserDTO> editUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> editUser(@Valid @RequestBody UserDTO userDTO) {
         User user = convertToEntity(userDTO);
         user = userService.editUser(userDTO.getEmail(), user);
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
@@ -58,6 +59,7 @@ public class UserController {
         userDTO.setEmail(user.getEmail());
         userDTO.setBirthDate(user.getBirthDate());
         userDTO.setPhone(user.getPhone());
+        userDTO.setPesel(user.getPesel());
         return userDTO;
     }
 
@@ -69,6 +71,7 @@ public class UserController {
         user.setPhone(userDTO.getPhone());
         user.setPassword(userDTO.getPassword());
         user.setEmail(userDTO.getEmail());
+        user.setPesel(userDTO.getPesel());
         return user;
     }
 }
