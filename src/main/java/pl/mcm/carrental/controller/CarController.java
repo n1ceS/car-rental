@@ -72,11 +72,10 @@ public class CarController {
         carStatusService.getCarStatusById(carDTO.getStatus());
         Car car = convertToEntity(carDTO);
         car.setBrand(car.getBrand().toLowerCase());
-
-        car = carService.addCar(car);
+        carService.addCar(car);
         carDetailsService.addCarDetails(getCarDetailsFromCarDTO(car.getId(), carDTO));
 
-        return new ResponseEntity<>(convertToDto(car), HttpStatus.CREATED);
+        return new ResponseEntity<>(carDTO, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
