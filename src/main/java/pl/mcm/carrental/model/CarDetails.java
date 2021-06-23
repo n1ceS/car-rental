@@ -42,7 +42,7 @@ public class CarDetails implements Serializable {
     private String description;
 
     @Column(name = "doors_number")
-    private String doorsNumber;
+    private int doorsNumber;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "car_id")
