@@ -2,6 +2,8 @@ package pl.mcm.carrental.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import pl.mcm.carrental.dto.UserDTO;
 import pl.mcm.carrental.model.User;
@@ -24,6 +26,7 @@ public class UserController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<List<UserDTO>> getAllUsers(
             @RequestParam(value = "page", required = false, defaultValue = ConstantAppValues.DEFAULT_PAGE) Integer page,
             @RequestParam(value = "size", required = false, defaultValue = ConstantAppValues.DEFAULT_PAGE_SIZE) Integer size) {
@@ -33,6 +36,7 @@ public class UserController {
     }
 
     @GetMapping("/{email}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<UserDTO> getUserByEmail(@PathVariable String email) {
         UserDTO userDTO = convertToDto(userService.getUserByEmail(email));
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
@@ -46,9 +50,9 @@ public class UserController {
     }
 
     @PutMapping
-    public ResponseEntity<UserDTO> editUser(@Valid @RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserDTO> editUser(@Valid @RequestBody UserDTO userDTO, @AuthenticationPrincipal String username) {
         User user = convertToEntity(userDTO);
-        user = userService.editUser(userDTO.getEmail(), user);
+        user = userService.editUser(userDTO.getEmail(), user, username);
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 

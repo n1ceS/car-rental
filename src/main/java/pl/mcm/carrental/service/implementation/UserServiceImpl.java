@@ -5,6 +5,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.mcm.carrental.exception.AccessDeniedException;
 import pl.mcm.carrental.exception.BadRequestException;
 import pl.mcm.carrental.exception.ResourceNotFoundException;
 import pl.mcm.carrental.model.User;
@@ -61,8 +62,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User editUser(String email, User user) {
+    public User editUser(String email, User user, String username) {
         User userToEdit = userRepository.findUserByEmail(email).orElseThrow(() -> new ResourceNotFoundException("user", "email", email));
+        if(email != username) {
+            ApiResponse apiResponse = new ApiResponse(Boolean.FALSE, "No permission to edit user with username" + username);
+            throw new AccessDeniedException(apiResponse);
+        }
         if(userRepository.existsByEmail(user.getEmail())) {
             ApiResponse apiResponse = new ApiResponse(Boolean.FALSE, "Email is already taken!");
             throw new BadRequestException(apiResponse);

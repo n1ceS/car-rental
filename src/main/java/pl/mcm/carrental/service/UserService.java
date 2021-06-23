@@ -17,7 +17,7 @@ public interface UserService {
 
     User addUser(User user);
 
-    User editUser(String email, User user);
+    User editUser(String email, User user, String username);
 
     User addRoleToUser(Long userId ,Long roleId);
 

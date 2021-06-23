@@ -3,6 +3,7 @@ package pl.mcm.carrental.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.mcm.carrental.dto.CarDTO;
 import pl.mcm.carrental.model.Car;
@@ -33,16 +34,19 @@ public class CarStatusController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<CarStatus> addCarStatus(@Valid @RequestBody CarStatus carStatus) throws ParseException {
         return new ResponseEntity<>(carStatusService.addCarStatus(carStatus), HttpStatus.CREATED);
     }
 
     @PutMapping()
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<CarStatus> editCarStatus(@Valid @RequestBody CarStatus carStatus) {
         return new ResponseEntity<>(carStatusService.editCarStatus(carStatus), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<ApiResponse> deleteCarStatus(@PathVariable(name = "id") String id) {
         return new ResponseEntity<>(carStatusService.deleteCarStatus(id), HttpStatus.OK);
     }

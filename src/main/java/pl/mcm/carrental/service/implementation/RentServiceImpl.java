@@ -2,8 +2,10 @@ package pl.mcm.carrental.service.implementation;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.mcm.carrental.exception.AccessDeniedException;
 import pl.mcm.carrental.exception.ResourceNotFoundException;
 import pl.mcm.carrental.model.Rent;
 import pl.mcm.carrental.model.RentStatus;
@@ -65,14 +67,20 @@ public class RentServiceImpl implements RentService {
 
     @Override
     @Transactional
-    public Rent cancelRent(Long rentId) {
+    public Rent cancelRent(Long rentId, String username) {
+        Long userId = userRepository.findUserByEmail(username).get().getId();
         Rent rent = rentRepository.findById(rentId).orElseThrow(() -> new ResourceNotFoundException("rent", "id", rentId));
+        if(rent.getUserID() != userId) {
+            ApiResponse apiResponse = new ApiResponse(Boolean.FALSE, "You don't have permission to delete profile of: " + username);
+            throw new AccessDeniedException(apiResponse);
+        }
         RentStatus rentStatus = rentStatusRepository.getById("CANCELED");
         rent.setRentStatus(rentStatus);
         return rent;
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public Rent changeStatus(Long rentId, String status) {
         Rent rent = rentRepository.findById(rentId).orElseThrow(() -> new ResourceNotFoundException("rent", "id", rentId));
         RentStatus rentStatus = rentStatusRepository.findById(status).orElseThrow(() -> new ResourceNotFoundException("status", "id", rentId));
@@ -87,12 +95,18 @@ public class RentServiceImpl implements RentService {
     }
 
     @Override
-    public Rent getRentById(Long rentId) {
+    public Rent getRentById(Long rentId, String username) {
         Rent rent = rentRepository.findById(rentId).orElseThrow(() -> new ResourceNotFoundException("rent", "id", rentId));
+        Long userId = userRepository.findUserByEmail(username).get().getId();
+        if(rent.getUserID() != userId) {
+            ApiResponse apiResponse = new ApiResponse(Boolean.FALSE, "You don't have permission to delete profile of: " + username);
+            throw new AccessDeniedException(apiResponse);
+        }
         return rent;
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ApiResponse deleteRent(Long rentId) {
         Rent rent = rentRepository.findById(rentId).orElseThrow(() -> new ResourceNotFoundException("rent", "id", rentId));
         rentRepository.delete(rent);

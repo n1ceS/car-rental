@@ -62,8 +62,8 @@ public class RentController {
     }
 
     @PutMapping("/cancel/{id}")
-    public ResponseEntity<RentDTO> cancelRent(@PathVariable(name = "id") long id) {
-        return new ResponseEntity<>(convertToDto(rentService.cancelRent(id)), HttpStatus.OK);
+    public ResponseEntity<RentDTO> cancelRent(@PathVariable(name = "id") long id, @AuthenticationPrincipal String username) {
+        return new ResponseEntity<>(convertToDto(rentService.cancelRent(id, username)), HttpStatus.OK);
     }
 
     @PostMapping
@@ -74,6 +74,12 @@ public class RentController {
         rent = rentService.addRent(rent, username);
 
         return new ResponseEntity<>(convertToDto(rent), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}}")
+    public ResponseEntity<RentDTO> getRentById(@PathVariable(name = "id") Long id, @AuthenticationPrincipal String username) {
+        Rent rent =  rentService.getRentById(id, username);
+        return new ResponseEntity<>(convertToDto(rent), HttpStatus.OK);
     }
 
 

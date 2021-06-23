@@ -13,13 +13,13 @@ public interface RentService {
 
     Rent editRent(Long id, Rent Rent, String username);
 
-    Rent cancelRent(Long rentId);
+    Rent cancelRent(Long rentId, String username);
 
     Rent changeStatus(Long rentId, String status);
 
     List<Rent> getAllRents(int page, int size, String username);
 
-    Rent getRentById(Long rentId);
+    Rent getRentById(Long rentId, String username);
 
     ApiResponse deleteRent(Long rentId);
 

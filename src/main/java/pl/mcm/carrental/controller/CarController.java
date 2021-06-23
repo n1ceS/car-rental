@@ -72,13 +72,14 @@ public class CarController {
         carStatusService.getCarStatusById(carDTO.getStatus());
         Car car = convertToEntity(carDTO);
         car.setBrand(car.getBrand().toLowerCase());
-        carService.addCar(car);
+        car = carService.addCar(car);
         carDetailsService.addCarDetails(getCarDetailsFromCarDTO(car.getId(), carDTO));
 
-        return new ResponseEntity<>(carDTO, HttpStatus.CREATED);
+        return new ResponseEntity<>(convertToDto(car), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<CarDTO> editCar(@PathVariable(name = "id") Long id, @Valid @RequestBody CarDTO carDTO){
         Car carToEdit = convertToEntity(carDTO);
         carToEdit.setCarDetails(getCarDetailsFromCarDTO(id ,carDTO));
@@ -88,6 +89,7 @@ public class CarController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<ApiResponse> deleteCar(@PathVariable(name = "id") Long id) {
         return new ResponseEntity<>(carService.deleteCar(id), HttpStatus.OK);
     }
