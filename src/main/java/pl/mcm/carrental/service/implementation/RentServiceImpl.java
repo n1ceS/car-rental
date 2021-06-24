@@ -60,7 +60,7 @@ public class RentServiceImpl implements RentService {
         BigDecimal carPrice = carRepository.findById(rent.getCarID()).orElseThrow(() -> new ResourceNotFoundException("Car", "id", rent.getCarID())).getPrice();
         Rent rentToEdit = rentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("rent", "id", id));
         Long userId = userRepository.findUserByEmail(username).get().getId();
-        if(rent.getUserID() != userId) {
+        if(rentToEdit.getUserID() != userId) {
             ApiResponse apiResponse = new ApiResponse(Boolean.FALSE, "You don't have permission to edit this rent");
             throw new AccessDeniedException(apiResponse);
         }

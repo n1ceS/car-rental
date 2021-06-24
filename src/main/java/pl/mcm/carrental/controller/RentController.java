@@ -50,10 +50,10 @@ public class RentController {
         return new ResponseEntity<>(rentService.deleteRent(id), HttpStatus.OK);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<RentDTO> editRent(@PathVariable(name = "id") Long id, @RequestBody @Valid RentDTO rentDTO, @ApiParam(hidden = true) @AuthenticationPrincipal String username) {
+    @PutMapping("/{rent_id}")
+    public ResponseEntity<RentDTO> editRent(@PathVariable(name = "rent_id") Long rent_id, @RequestBody @Valid RentDTO rentDTO, @ApiParam(hidden = true) @AuthenticationPrincipal String username) {
         Rent rent = convertToEntity(rentDTO);
-        rent = rentService.editRent(id, rent, username);
+        rent = rentService.editRent(rent_id, rent, username);
         return new ResponseEntity<>(convertToDto(rent), HttpStatus.OK);
     }
 
@@ -72,7 +72,7 @@ public class RentController {
         return new ResponseEntity<>(convertToDto(rent), HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}}")
+    @GetMapping("/{id}")
     public ResponseEntity<RentDTO> getRentById(@PathVariable(name = "id") Long id, @AuthenticationPrincipal String username) {
         Rent rent =  rentService.getRentById(id, username);
         return new ResponseEntity<>(convertToDto(rent), HttpStatus.OK);
