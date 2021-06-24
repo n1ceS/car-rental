@@ -1,5 +1,6 @@
 package pl.mcm.carrental.controller;
 
+import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/rent")
+@RequestMapping("/rents")
 @AllArgsConstructor
 public class RentController {
     private final RentService rentService;
@@ -37,7 +38,7 @@ public class RentController {
     @GetMapping
     public ResponseEntity<List<RentDTO>> getAllRents( @RequestParam(value = "page", required = false, defaultValue = ConstantAppValues.DEFAULT_PAGE) Integer page,
                                                       @RequestParam(value = "size", required = false, defaultValue = ConstantAppValues.DEFAULT_PAGE_SIZE) Integer size,
-                                                      @AuthenticationPrincipal String username) {
+                                                      @ApiParam(hidden = true) @AuthenticationPrincipal String username) {
         List<Rent> rents = rentService.getAllRents(page, size, username);
 
 
@@ -50,19 +51,19 @@ public class RentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<RentDTO> editRent(@PathVariable(name = "id") Long id, @RequestBody @Valid RentDTO rentDTO, @AuthenticationPrincipal String username) throws ParseException {
+    public ResponseEntity<RentDTO> editRent(@PathVariable(name = "id") Long id, @RequestBody @Valid RentDTO rentDTO, @ApiParam(hidden = true) @AuthenticationPrincipal String username) throws ParseException {
         Rent rent = convertToEntity(rentDTO);
         rent = rentService.editRent(id, rent, username);
         return new ResponseEntity<>(convertToDto(rent), HttpStatus.OK);
     }
 
     @PutMapping("/cancel/{id}")
-    public ResponseEntity<RentDTO> cancelRent(@PathVariable(name = "id") long id, @AuthenticationPrincipal String username) {
+    public ResponseEntity<RentDTO> cancelRent(@PathVariable(name = "id") long id, @ApiParam(hidden = true) @AuthenticationPrincipal String username) {
         return new ResponseEntity<>(convertToDto(rentService.cancelRent(id, username)), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<RentDTO> addRent(@RequestBody @Valid RentDTO rentDTO, @AuthenticationPrincipal String username) throws ParseException {
+    public ResponseEntity<RentDTO> addRent(@RequestBody @Valid RentDTO rentDTO, @ApiParam(hidden = true) @AuthenticationPrincipal String username) throws ParseException {
         Rent rent = convertToEntity(rentDTO);
         RentStatus rentStatus = rentStatusService.getRentStatusByName("NEW");
         rent.setRentStatus(rentStatus);

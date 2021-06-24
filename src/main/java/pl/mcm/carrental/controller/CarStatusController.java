@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/carstatus")
+@RequestMapping("/carstatuses")
 public class CarStatusController {
     @Autowired
     private CarStatusService carStatusService;

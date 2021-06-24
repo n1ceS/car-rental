@@ -1,5 +1,7 @@
 package pl.mcm.carrental.controller;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -50,7 +52,7 @@ public class UserController {
     }
 
     @PutMapping
-    public ResponseEntity<UserDTO> editUser(@Valid @RequestBody UserDTO userDTO, @AuthenticationPrincipal String username) {
+    public ResponseEntity<UserDTO> editUser(@Valid @RequestBody UserDTO userDTO, @ApiParam(hidden = true) @AuthenticationPrincipal String username) {
         User user = convertToEntity(userDTO);
         user = userService.editUser(userDTO.getEmail(), user, username);
         return new ResponseEntity<>(convertToDto(user), HttpStatus.OK);
