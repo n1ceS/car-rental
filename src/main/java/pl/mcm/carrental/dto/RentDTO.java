@@ -45,16 +45,4 @@ public class RentDTO {
 
     public RentDTO() {
     }
-
-    @JsonIgnore
-    @JsonProperty(value = "id")
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @JsonIgnore
-    @JsonProperty(value = "total_cost")
-    public void setTotalCost(BigDecimal totalCost) {
-        this.totalCost = totalCost;
-    }
 }

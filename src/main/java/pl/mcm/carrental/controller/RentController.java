@@ -51,7 +51,7 @@ public class RentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<RentDTO> editRent(@PathVariable(name = "id") Long id, @RequestBody @Valid RentDTO rentDTO, @ApiParam(hidden = true) @AuthenticationPrincipal String username) throws ParseException {
+    public ResponseEntity<RentDTO> editRent(@PathVariable(name = "id") Long id, @RequestBody @Valid RentDTO rentDTO, @ApiParam(hidden = true) @AuthenticationPrincipal String username) {
         Rent rent = convertToEntity(rentDTO);
         rent = rentService.editRent(id, rent, username);
         return new ResponseEntity<>(convertToDto(rent), HttpStatus.OK);
@@ -63,7 +63,7 @@ public class RentController {
     }
 
     @PostMapping
-    public ResponseEntity<RentDTO> addRent(@RequestBody @Valid RentDTO rentDTO, @ApiParam(hidden = true) @AuthenticationPrincipal String username) throws ParseException {
+    public ResponseEntity<RentDTO> addRent(@RequestBody @Valid RentDTO rentDTO, @ApiParam(hidden = true) @AuthenticationPrincipal String username) {
         Rent rent = convertToEntity(rentDTO);
         RentStatus rentStatus = rentStatusService.getRentStatusByName("NEW");
         rent.setRentStatus(rentStatus);
@@ -136,8 +136,6 @@ public class RentController {
         rent.setCarID(rentDTO.getCarID());
         rent.setStartDate(rentDTO.getStartDate());
         rent.setEndDate(rentDTO.getEndDate());
-        rent.setTotalCost(rentDTO.getTotalCost());
-
         return rent;
     }
 }
