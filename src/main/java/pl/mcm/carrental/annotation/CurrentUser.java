@@ -1,4 +1,4 @@
-package pl.mcm.carrental.payload;
+package pl.mcm.carrental.annotation;
 
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

@@ -3,6 +3,7 @@ package pl.mcm.carrental.service.implementation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.mcm.carrental.dto.CarDTO;
 import pl.mcm.carrental.exception.ResourceNotFoundException;
 import pl.mcm.carrental.model.CarDetails;
@@ -14,8 +15,13 @@ import pl.mcm.carrental.service.CarDetailsService;
 @Service
 public class CarDetailsServiceImpl implements CarDetailsService {
 
-    @Autowired
     private CarDetailsRepository carDetailsRepository;
+
+    @Autowired
+    public CarDetailsServiceImpl(CarDetailsRepository carDetailsRepository) {
+        this.carDetailsRepository = carDetailsRepository;
+    }
+
     @Override
     public CarDetails addCarDetails(CarDetails carDetails) {
 
@@ -23,6 +29,7 @@ public class CarDetailsServiceImpl implements CarDetailsService {
     }
 
     @Override
+    @Transactional
     public CarDetails editCarDetails(Long id, CarDetails carDetails) {
         CarDetails carDetailsToEdit = carDetailsRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("carDetails", "id", carDetails.getCarID()));
         carDetailsToEdit.setType(carDetails.getType());
@@ -38,6 +45,7 @@ public class CarDetailsServiceImpl implements CarDetailsService {
     }
 
     @Override
+    @Transactional
     public ApiResponse deleteCarDetails(Long carId) {
         carDetailsRepository.findById(carId).orElseThrow(() -> new ResourceNotFoundException("car", "id", carId));
         carDetailsRepository.deleteById(carId);
@@ -45,6 +53,7 @@ public class CarDetailsServiceImpl implements CarDetailsService {
     }
 
     @Override
+    @Transactional
     public CarDetails getDetailsByCarId(Long carId) {
         return carDetailsRepository.findById(carId).orElseThrow(() -> new ResourceNotFoundException("car", "id", carId));
     }

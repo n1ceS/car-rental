@@ -6,15 +6,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import pl.mcm.carrental.dto.RentDTO;
-import pl.mcm.carrental.model.Car;
 import pl.mcm.carrental.model.Rent;
 import pl.mcm.carrental.model.RentStatus;
-import pl.mcm.carrental.model.User;
 import pl.mcm.carrental.payload.ApiResponse;
-import pl.mcm.carrental.payload.CurrentUser;
 import pl.mcm.carrental.service.CarService;
 import pl.mcm.carrental.service.RentService;
 import pl.mcm.carrental.service.RentStatusService;
@@ -23,7 +19,6 @@ import pl.mcm.carrental.utils.ConstantAppValues;
 
 import javax.validation.Valid;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
