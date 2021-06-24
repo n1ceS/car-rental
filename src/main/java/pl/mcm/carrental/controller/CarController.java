@@ -82,10 +82,10 @@ public class CarController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<CarDTO> editCar(@PathVariable(name = "id") Long id, @Valid @RequestBody CarDTO carDTO){
         Car carToEdit = convertToEntity(carDTO);
-        carToEdit.setCarDetails(getCarDetailsFromCarDTO(id ,carDTO));
-        carToEdit.setId(carToEdit.getId());
-        Car carEdited = carService.editCar(id, carToEdit);
-        return new ResponseEntity<>(convertToDto(carEdited), HttpStatus.OK);
+        carToEdit.setId(id);
+        carToEdit = carService.editCar(id, carToEdit);
+        carDetailsService.editCarDetails(id, getCarDetailsFromCarDTO(id, carDTO));
+        return new ResponseEntity<>(convertToDto(carToEdit), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
