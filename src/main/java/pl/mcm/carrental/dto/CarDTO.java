@@ -35,7 +35,7 @@ public class CarDTO {
     @Max(value = 2021)
     private int year;
 
-    @Size(max = 5, message = "The max length of status is 5!")
+    @Size(max = 6, message = "The max length of status is 6!")
     private String status;
 
     @NotBlank
