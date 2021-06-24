@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
+import pl.mcm.carrental.model.RentStatus;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -38,6 +39,9 @@ public class RentDTO {
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private BigDecimal totalCost;
+
+    @NotNull
+    private String rentStatus;
 
     public RentDTO() {
     }

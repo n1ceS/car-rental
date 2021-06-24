@@ -125,6 +125,7 @@ public class RentController {
         rentDTO.setTotalCost(rent.getTotalCost());
         rentDTO.setStartDate(rent.getStartDate());
         rentDTO.setEndDate(rent.getEndDate());
+        rentDTO.setRentStatus(rent.getRentStatus().getRentStatus());
         return rentDTO;
     }
 
