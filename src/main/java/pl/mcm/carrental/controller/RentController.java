@@ -130,10 +130,8 @@ public class RentController {
 
    private Rent convertToEntity(RentDTO rentDTO) {
         Rent rent = new Rent();
-
         rent.setId(rentDTO.getId());
         rent.setCarID(rentDTO.getCarID());
-        rent.setUserID(rentDTO.getUserID());
         rent.setStartDate(rentDTO.getStartDate());
         rent.setEndDate(rentDTO.getEndDate());
         rent.setTotalCost(rentDTO.getTotalCost());

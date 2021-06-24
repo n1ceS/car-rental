@@ -20,10 +20,10 @@ public class Rent implements Serializable {
     private Long id;
 
     @Column(name = "car_id")
-    private long carID;
+    private Long carID;
 
     @Column(name = "user_id")
-    private long userID;
+    private Long userID;
 
     @Column(name = "start_date")
     private LocalDate startDate;

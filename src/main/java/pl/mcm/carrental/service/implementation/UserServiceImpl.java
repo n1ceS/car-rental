@@ -70,10 +70,6 @@ public class UserServiceImpl implements UserService {
             ApiResponse apiResponse = new ApiResponse(Boolean.FALSE, "No permission to edit user with username" + username);
             throw new AccessDeniedException(apiResponse);
         }
-        if(userRepository.existsByEmail(user.getEmail())) {
-            ApiResponse apiResponse = new ApiResponse(Boolean.FALSE, "Email is already taken!");
-            throw new BadRequestException(apiResponse);
-        }
         userToEdit.setFirstname(user.getFirstname());
         userToEdit.setLastname(user.getLastname());
         userToEdit.setPassword(user.getPassword());

@@ -53,7 +53,7 @@ public class UserController {
     public ResponseEntity<UserDTO> editUser(@Valid @RequestBody UserDTO userDTO, @AuthenticationPrincipal String username) {
         User user = convertToEntity(userDTO);
         user = userService.editUser(userDTO.getEmail(), user, username);
-        return new ResponseEntity<>(userDTO, HttpStatus.OK);
+        return new ResponseEntity<>(convertToDto(user), HttpStatus.OK);
     }
 
     private UserDTO convertToDto(User user) {
