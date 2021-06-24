@@ -18,7 +18,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class RentDTO {
 
-    @JsonIgnore
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
@@ -27,8 +26,7 @@ public class RentDTO {
     @Min(value = 0, message = "Car Id must be equal or greater than 0")
     private Long carID;
 
-    @NotNull(message = "User id cannot be null")
-    @Min(value = 0, message = "User Id must be equal or greater than 0")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long userID;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
@@ -38,7 +36,6 @@ public class RentDTO {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate endDate;
 
-    @JsonIgnore
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private BigDecimal totalCost;
 
