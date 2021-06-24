@@ -15,9 +15,8 @@ import java.util.Set;
 @Setter
 public class CarStatus implements Serializable {
 
-    @Id()
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JoinColumn(name = "car_status" )
+    @Id
+    @Column(name = "car_status" )
     @NotBlank
     private String carStatus;
 

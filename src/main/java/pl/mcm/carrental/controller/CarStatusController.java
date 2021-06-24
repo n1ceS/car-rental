@@ -35,7 +35,7 @@ public class CarStatusController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<CarStatus> addCarStatus(@Valid @RequestBody CarStatus carStatus) throws ParseException {
+    public ResponseEntity<CarStatus> addCarStatus(@Valid @RequestBody CarStatus carStatus){
         return new ResponseEntity<>(carStatusService.addCarStatus(carStatus), HttpStatus.CREATED);
     }
 
