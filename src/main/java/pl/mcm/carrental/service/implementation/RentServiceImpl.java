@@ -60,6 +60,10 @@ public class RentServiceImpl implements RentService {
         BigDecimal carPrice = carRepository.findById(rent.getCarID()).orElseThrow(() -> new ResourceNotFoundException("Car", "id", rent.getCarID())).getPrice();
         Rent rentToEdit = rentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("rent", "id", id));
         Long userId = userRepository.findUserByEmail(username).get().getId();
+        if(rent.getUserID() != userId) {
+            ApiResponse apiResponse = new ApiResponse(Boolean.FALSE, "You don't have permission to edit this rent");
+            throw new AccessDeniedException(apiResponse);
+        }
         rent.setUserID(userId);
 
         rentToEdit.setCarID(rent.getCarID());
@@ -77,7 +81,7 @@ public class RentServiceImpl implements RentService {
         Long userId = userRepository.findUserByEmail(username).get().getId();
         Rent rent = rentRepository.findById(rentId).orElseThrow(() -> new ResourceNotFoundException("rent", "id", rentId));
         if(rent.getUserID() != userId) {
-            ApiResponse apiResponse = new ApiResponse(Boolean.FALSE, "You don't have permission to delete profile of: " + username);
+            ApiResponse apiResponse = new ApiResponse(Boolean.FALSE, "You don't have permission to cancel this rent!");
             throw new AccessDeniedException(apiResponse);
         }
         RentStatus rentStatus = rentStatusRepository.getById("CANCELED");
