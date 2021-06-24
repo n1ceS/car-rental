@@ -43,6 +43,7 @@ public class RentServiceImpl implements RentService {
     }
 
     @Override
+    @Transactional
     public Rent addRent(Rent rent, String username) {
         Long carId = rent.getCarID();
         Long userId = userRepository.findUserByEmail(username).get().getId();
@@ -54,6 +55,7 @@ public class RentServiceImpl implements RentService {
     }
 
     @Override
+    @Transactional
     public Rent editRent(Long id, Rent rent, String username) {
         BigDecimal carPrice = carRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Car", "id", id)).getPrice();
         Rent rentToEdit = rentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("rent", "id", id));
@@ -107,6 +109,7 @@ public class RentServiceImpl implements RentService {
 
     @Override
     @PreAuthorize("hasAuthority('ADMIN')")
+    @Transactional
     public ApiResponse deleteRent(Long rentId) {
         Rent rent = rentRepository.findById(rentId).orElseThrow(() -> new ResourceNotFoundException("rent", "id", rentId));
         rentRepository.delete(rent);

@@ -9,6 +9,7 @@ import pl.mcm.carrental.payload.ApiResponse;
 import pl.mcm.carrental.repository.CarStatusRepository;
 import pl.mcm.carrental.service.CarStatusService;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -21,11 +22,13 @@ public class CarStatusServiceImpl implements CarStatusService {
     }
 
     @Override
+    @Transactional
     public CarStatus addCarStatus(CarStatus carStatus) {
         return carStatusRepository.save(carStatus);
     }
 
     @Override
+    @Transactional
     public CarStatus editCarStatus(CarStatus carStatus) {
         CarStatus carStatusToEdit = carStatusRepository.findById(carStatus.getCarStatus()).orElseThrow(() -> new ResourceNotFoundException("carStatus", "id", carStatus.getCarStatus()));
         carStatusToEdit.setDescription(carStatus.getDescription());
@@ -33,6 +36,7 @@ public class CarStatusServiceImpl implements CarStatusService {
     }
 
     @Override
+    @Transactional
     public ApiResponse deleteCarStatus(String carStatusId) {
         CarStatus carStatus = carStatusRepository.findById(carStatusId).orElseThrow(() -> new ResourceNotFoundException("car", "id", carStatusId));
         carStatusRepository.delete(carStatus);

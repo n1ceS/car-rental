@@ -1,6 +1,7 @@
 package pl.mcm.carrental.service.implementation;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.mcm.carrental.model.RentStatus;
 import pl.mcm.carrental.repository.RentStatusRepository;
 import pl.mcm.carrental.service.RentStatusService;
@@ -14,6 +15,7 @@ public class RentStatusServiceImpl implements RentStatusService {
     }
 
     @Override
+    @Transactional
     public RentStatus addRentStatus(RentStatus rentStatus) {
         return rentStatusRepository.save(rentStatus);
     }

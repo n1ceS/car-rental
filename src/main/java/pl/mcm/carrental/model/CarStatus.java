@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Set;
 
@@ -17,8 +18,10 @@ public class CarStatus implements Serializable {
     @Id()
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JoinColumn(name = "car_status" )
+    @NotBlank
     private String carStatus;
 
+    @NotBlank
     @Column(name = "description")
     private String description;
 

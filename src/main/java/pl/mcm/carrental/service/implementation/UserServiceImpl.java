@@ -52,6 +52,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User addUser(User user) {
         if(userRepository.existsByEmail(user.getEmail())) {
             ApiResponse apiResponse =  new ApiResponse(Boolean.FALSE, "Email is already taken!");
@@ -62,6 +63,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User editUser(String email, User user, String username) {
         User userToEdit = userRepository.findUserByEmail(email).orElseThrow(() -> new ResourceNotFoundException("user", "email", email));
         if(email != username) {
@@ -81,6 +83,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User addRoleToUser(Long userId, Long roleId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("user", "id", userId));
         UserRole userRole = userRoleRepository.findById(roleId).orElseThrow(() -> new ResourceNotFoundException("role", "id", roleId));

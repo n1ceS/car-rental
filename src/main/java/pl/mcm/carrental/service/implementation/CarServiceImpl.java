@@ -62,6 +62,7 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
+    @Transactional
     public ApiResponse deleteCar(Long id) {
         carRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("car", "id", id));
         carRepository.deleteById(id);
