@@ -26,11 +26,11 @@ import java.util.Date;
 @AllArgsConstructor
 public class UserDTO {
 
-    @NotNull
+    @NotBlank
     @Size(max = 50)
     private String firstname;
 
-    @NotNull
+    @NotBlank
     @Size(max = 50)
     private String lastname;
 
@@ -51,7 +51,6 @@ public class UserDTO {
     @Size(max = 255)
     private String email;
 
-    @NotNull
     @Size(max = 20)
     private String phone;
 
@@ -66,15 +65,4 @@ public class UserDTO {
     public UserDTO() {
     }
 
-    @JsonIgnore
-    @JsonProperty(value = "password")
-    public String getPassword() {
-        return password;
-    }
-
-    @JsonIgnore
-    @JsonProperty(value = "repeatedPassword")
-    public String getRepeatedPassword() {
-        return repeatedPassword;
-    }
 }

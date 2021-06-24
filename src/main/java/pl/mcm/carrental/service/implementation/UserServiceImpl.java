@@ -59,20 +59,22 @@ public class UserServiceImpl implements UserService {
             throw new BadRequestException(apiResponse);
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
+        user = userRepository.save(user);
+        addRoleToUser(user.getId(), "USER");
+        return user;
     }
 
     @Override
     @Transactional
     public User editUser(String email, User user, String username) {
         User userToEdit = userRepository.findUserByEmail(email).orElseThrow(() -> new ResourceNotFoundException("user", "email", email));
-        if(email != username) {
+        if(!email.equals(username)) {
             ApiResponse apiResponse = new ApiResponse(Boolean.FALSE, "No permission to edit user with username" + username);
             throw new AccessDeniedException(apiResponse);
         }
         userToEdit.setFirstname(user.getFirstname());
         userToEdit.setLastname(user.getLastname());
-        userToEdit.setPassword(user.getPassword());
+        userToEdit.setPassword(passwordEncoder.encode(user.getPassword()));
         userToEdit.setPhone(user.getPhone());
         userToEdit.setBirthDate(user.getBirthDate());
         return userToEdit;
@@ -80,9 +82,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User addRoleToUser(Long userId, Long roleId) {
+    public User addRoleToUser(Long userId, String role) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("user", "id", userId));
-        UserRole userRole = userRoleRepository.findById(roleId).orElseThrow(() -> new ResourceNotFoundException("role", "id", roleId));
+        UserRole userRole = userRoleRepository.findByType(role).orElseThrow(() -> new ResourceNotFoundException("role", "type", role));
         user.getUserRoleSet().add(userRole);
         return user;
     }

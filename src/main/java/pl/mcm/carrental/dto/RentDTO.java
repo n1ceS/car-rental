@@ -40,7 +40,7 @@ public class RentDTO {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private BigDecimal totalCost;
 
-    @NotNull
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String rentStatus;
 
     public RentDTO() {

@@ -19,7 +19,7 @@ public interface UserService {
 
     User editUser(String email, User user, String username);
 
-    User addRoleToUser(Long userId ,Long roleId);
+    User addRoleToUser(Long userId, String role);
 
     Optional<User> findUserByEmail(String email);
 }
