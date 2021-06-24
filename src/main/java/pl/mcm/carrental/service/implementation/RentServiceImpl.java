@@ -59,6 +59,8 @@ public class RentServiceImpl implements RentService {
     public Rent editRent(Long id, Rent rent, String username) {
         BigDecimal carPrice = carRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Car", "id", id)).getPrice();
         Rent rentToEdit = rentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("rent", "id", id));
+        Long userId = userRepository.findUserByEmail(username).get().getId();
+        rent.setUserID(userId);
         rentToEdit.setCarID(rent.getCarID());
         rentToEdit.setStartDate(rent.getStartDate());
         rentToEdit.setEndDate(rent.getEndDate());
