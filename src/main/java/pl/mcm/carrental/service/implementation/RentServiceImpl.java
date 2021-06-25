@@ -3,6 +3,7 @@ package pl.mcm.carrental.service.implementation;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.mcm.carrental.exception.AccessDeniedException;
@@ -19,7 +20,6 @@ import pl.mcm.carrental.service.RentService;
 import pl.mcm.carrental.utils.ConstantAppValues;
 
 import java.math.BigDecimal;
-import java.time.Duration;
 import java.util.List;
 
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -59,12 +59,12 @@ public class RentServiceImpl implements RentService {
     public Rent editRent(Long id, Rent rent, String username) {
         BigDecimal carPrice = carRepository.findById(rent.getCarID()).orElseThrow(() -> new ResourceNotFoundException("Car", "id", rent.getCarID())).getPrice();
         Rent rentToEdit = rentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("rent", "id", id));
-        Long userId = userRepository.findUserByEmail(username).get().getId();
-        if(rentToEdit.getUserID() != userId) {
+        User  user = userRepository.findUserByEmail(username).get();
+        if(rentToEdit.getUserID() != user.getId() && !user.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))) {
             ApiResponse apiResponse = new ApiResponse(Boolean.FALSE, "You don't have permission to edit this rent");
             throw new AccessDeniedException(apiResponse);
         }
-        rent.setUserID(userId);
+        rent.setUserID(user.getId());
 
         rentToEdit.setCarID(rent.getCarID());
         rentToEdit.setStartDate(rent.getStartDate());
@@ -78,9 +78,9 @@ public class RentServiceImpl implements RentService {
     @Override
     @Transactional
     public Rent cancelRent(Long rentId, String username) {
-        Long userId = userRepository.findUserByEmail(username).get().getId();
         Rent rent = rentRepository.findById(rentId).orElseThrow(() -> new ResourceNotFoundException("rent", "id", rentId));
-        if(rent.getUserID() != userId) {
+        User  user = userRepository.findUserByEmail(username).get();
+        if(rent.getUserID() != user.getId() && !user.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))) {
             ApiResponse apiResponse = new ApiResponse(Boolean.FALSE, "You don't have permission to cancel this rent!");
             throw new AccessDeniedException(apiResponse);
         }
@@ -107,8 +107,8 @@ public class RentServiceImpl implements RentService {
     @Override
     public Rent getRentById(Long rentId, String username) {
         Rent rent = rentRepository.findById(rentId).orElseThrow(() -> new ResourceNotFoundException("rent", "id", rentId));
-        Long userId = userRepository.findUserByEmail(username).get().getId();
-        if(rent.getUserID() != userId) {
+        User  user = userRepository.findUserByEmail(username).get();
+        if(rent.getUserID() != user.getId() && !user.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))) {
             ApiResponse apiResponse = new ApiResponse(Boolean.FALSE, "You don't have permission to delete profile of: " + username);
             throw new AccessDeniedException(apiResponse);
         }
@@ -131,6 +131,7 @@ public class RentServiceImpl implements RentService {
     }
 
     @Override
+    @PreAuthorize("hasAuthority('ADMIN')")
     public List<Rent> getRentsByUserId(Long userId, int page, int size) {
         return rentRepository.findAllByUserID(userId, PageRequest.of(page, size, Sort.by(ConstantAppValues.DEFAULT_SORT_DIRECTION, "id")));
     }

@@ -12,6 +12,7 @@ import pl.mcm.carrental.model.User;
 import pl.mcm.carrental.payload.ApiResponse;
 import pl.mcm.carrental.service.UserService;
 import pl.mcm.carrental.utils.ConstantAppValues;
+import pl.mcm.carrental.utils.UserConverter;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -34,50 +35,21 @@ public class UserController {
             @RequestParam(value = "size", required = false, defaultValue = ConstantAppValues.DEFAULT_PAGE_SIZE) Integer size) {
         List<User> users = userService.getAllUsers(page, size);
 
-        return new ResponseEntity<>(users.stream().map(this::convertToDto).collect(Collectors.toList()), HttpStatus.OK);
+        return new ResponseEntity<>(users.stream().map(UserConverter::convertToDto).collect(Collectors.toList()), HttpStatus.OK);
     }
 
     @GetMapping("/{email}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<UserDTO> getUserByEmail(@PathVariable String email) {
-        UserDTO userDTO = convertToDto(userService.getUserByEmail(email));
+        UserDTO userDTO = UserConverter.convertToDto(userService.getUserByEmail(email));
         return new ResponseEntity<>(userDTO, HttpStatus.OK);
-    }
-
-    @PostMapping
-    public ResponseEntity<UserDTO> addUser(@Valid @RequestBody UserDTO userDTO) {
-        User user = convertToEntity(userDTO);
-        userDTO = convertToDto(userService.addUser(user));
-        return new ResponseEntity<>(userDTO, HttpStatus.CREATED);
     }
 
     @PutMapping
     public ResponseEntity<UserDTO> editUser(@Valid @RequestBody UserDTO userDTO, @ApiParam(hidden = true) @AuthenticationPrincipal String username) {
-        User user = convertToEntity(userDTO);
+        User user = UserConverter.convertToEntity(userDTO);
         user = userService.editUser(userDTO.getEmail(), user, username);
-        return new ResponseEntity<>(convertToDto(user), HttpStatus.OK);
+        return new ResponseEntity<>(UserConverter.convertToDto(user), HttpStatus.OK);
     }
 
-    private UserDTO convertToDto(User user) {
-        UserDTO userDTO = new UserDTO();
-        userDTO.setFirstname(user.getFirstname());
-        userDTO.setLastname(user.getLastname());
-        userDTO.setEmail(user.getEmail());
-        userDTO.setBirthDate(user.getBirthDate());
-        userDTO.setPhone(user.getPhone());
-        userDTO.setPesel(user.getPesel());
-        return userDTO;
-    }
-
-    private User convertToEntity(UserDTO userDTO) {
-        User user = new User();
-        user.setFirstname(userDTO.getFirstname());
-        user.setLastname(userDTO.getLastname());
-        user.setBirthDate(userDTO.getBirthDate());
-        user.setPhone(userDTO.getPhone());
-        user.setPassword(userDTO.getPassword());
-        user.setEmail(userDTO.getEmail());
-        user.setPesel(userDTO.getPesel());
-        return user;
-    }
 }

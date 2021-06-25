@@ -2,6 +2,8 @@ package pl.mcm.carrental.service.implementation;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -68,7 +70,8 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User editUser(String email, User user, String username) {
         User userToEdit = userRepository.findUserByEmail(email).orElseThrow(() -> new ResourceNotFoundException("user", "email", email));
-        if(!email.equals(username)) {
+        User userRequested = userRepository.findUserByEmail(username).get();
+        if(!email.equals(username) && !userRequested.getAuthorities().contains(new SimpleGrantedAuthority("ADMIN"))) {
             ApiResponse apiResponse = new ApiResponse(Boolean.FALSE, "No permission to edit user with username" + username);
             throw new AccessDeniedException(apiResponse);
         }
@@ -82,6 +85,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    @PreAuthorize("hasAuthority('ADMIN')")
     public User addRoleToUser(Long userId, String role) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("user", "id", userId));
         UserRole userRole = userRoleRepository.findByType(role).orElseThrow(() -> new ResourceNotFoundException("role", "type", role));
