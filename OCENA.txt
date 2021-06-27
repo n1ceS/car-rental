@@ -1,0 +1,8 @@
+Car Rental - Chojecki Mateusz, Marczuk Michał
+
+Ocena na którą aspirujemy: 4
+Dołożyliśmy wszelkich starań, ażeby spełnić wymagania na ocenę 4, a ponadto:
+- Wykorzystaliśmy do projektowania i dokumentowania API narzędzia Swagger,
+- Aplikacja została oparta na Spring Boot
+- Zaproponowaliśmy schemat wersjonowania naszego API
+- Wykorzystaliśmy JSON Web Token'a do uwierzytelnienia i autoryzacji użytkownika
