@@ -46,6 +46,7 @@ public class RentController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<ApiResponse> deleteRent(@PathVariable(name = "id") Long id) {
         return new ResponseEntity<>(rentService.deleteRent(id), HttpStatus.OK);
     }

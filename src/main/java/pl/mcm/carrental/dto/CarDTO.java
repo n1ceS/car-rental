@@ -13,7 +13,6 @@ import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
 @Data
-@Builder
 @AllArgsConstructor
 public class CarDTO {
 

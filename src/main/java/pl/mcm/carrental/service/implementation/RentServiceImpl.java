@@ -116,7 +116,6 @@ public class RentServiceImpl implements RentService {
     }
 
     @Override
-    @PreAuthorize("hasAuthority('ADMIN')")
     @Transactional
     public ApiResponse deleteRent(Long rentId) {
         Rent rent = rentRepository.findById(rentId).orElseThrow(() -> new ResourceNotFoundException("rent", "id", rentId));
@@ -131,7 +130,6 @@ public class RentServiceImpl implements RentService {
     }
 
     @Override
-    @PreAuthorize("hasAuthority('ADMIN')")
     public List<Rent> getRentsByUserId(Long userId, int page, int size) {
         return rentRepository.findAllByUserID(userId, PageRequest.of(page, size, Sort.by(ConstantAppValues.DEFAULT_SORT_DIRECTION, "id")));
     }
