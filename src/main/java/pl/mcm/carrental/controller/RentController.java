@@ -120,7 +120,7 @@ public class RentController {
 
     @PostMapping("/{id}/status/{status_name}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<RentDTO> changeStatus(@RequestParam(name = "id") Long id, @RequestParam(value = "status_name") String status_name) {
+    public ResponseEntity<RentDTO> changeStatus(@PathVariable(name = "id") Long id, @PathVariable(value = "status_name") String status_name) {
         Rent rent =  rentService.changeStatus(id, status_name);
         return new ResponseEntity<>(convertToDto(rent), HttpStatus.OK);
     }
