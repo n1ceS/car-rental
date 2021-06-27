@@ -118,6 +118,12 @@ public class RentController {
         return new ResponseEntity<>(rents.stream().map(this::convertToDto).collect(Collectors.toList()), HttpStatus.OK);
     }
 
+    @PostMapping("/{id}/status/{status_name}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<RentDTO> changeStatus(@RequestParam(name = "id") Long id, @RequestParam(value = "status_name") String status_name) {
+        Rent rent =  rentService.changeStatus(id, status_name);
+        return new ResponseEntity<>(convertToDto(rent), HttpStatus.OK);
+    }
     private RentDTO convertToDto(Rent rent) {
         RentDTO rentDTO = new RentDTO();
 

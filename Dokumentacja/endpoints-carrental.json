@@ -4277,6 +4277,61 @@
 					]
 				},
 				{
+					"name": "{id},{status_name}",
+					"item": [
+						{
+							"name": "changeStatus",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbkBtYWlsLmNvbSIsImV4cCI6NTIyNDgxODI5MX0.CnV3rOC0tIoCQm3cRLWYHQpISJrPjwtonEBxiKKLKdg",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/rents/:rent_id/status/:status_name",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"rents",
+										":rent_id",
+										"status",
+										":status_name"
+									],
+									"variable": [
+										{
+											"key": "rent_id",
+											"value": "6"
+										},
+										{
+											"key": "status_name",
+											"value": "READY"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "bearer",
+						"bearer": [
+							{
+								"key": "token",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aXN6dGFsQG1haWwuY29tIiwiZXhwIjozNzYyNDYxNDc0Nn0.JMkU_FgJx46W7ZxTMJuRVC6acokRtJ8-A0uu5Mn7vSo",
+								"type": "string"
+							}
+						]
+					}
+				},
+				{
 					"name": "getAllRents",
 					"request": {
 						"auth": {

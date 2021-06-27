@@ -90,7 +90,6 @@ public class RentServiceImpl implements RentService {
     }
 
     @Override
-    @PreAuthorize("hasAuthority('ADMIN')")
     public Rent changeStatus(Long rentId, String status) {
         Rent rent = rentRepository.findById(rentId).orElseThrow(() -> new ResourceNotFoundException("rent", "id", rentId));
         RentStatus rentStatus = rentStatusRepository.findById(status).orElseThrow(() -> new ResourceNotFoundException("status", "id", rentId));

@@ -2,6 +2,7 @@ package pl.mcm.carrental.service.implementation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.mcm.carrental.exception.BadRequestException;
 import pl.mcm.carrental.exception.ResourceNotFoundException;
 import pl.mcm.carrental.model.Car;
 import pl.mcm.carrental.model.CarStatus;
@@ -24,6 +25,9 @@ public class CarStatusServiceImpl implements CarStatusService {
     @Override
     @Transactional
     public CarStatus addCarStatus(CarStatus carStatus) {
+        if(carStatusRepository.findById(carStatus.getCarStatus()).isPresent()) {
+            throw new BadRequestException(new ApiResponse(Boolean.FALSE, "This car status exists in database!"));
+        }
         return carStatusRepository.save(carStatus);
     }
 
